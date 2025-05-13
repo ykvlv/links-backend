@@ -5,10 +5,11 @@ pluginManagement {
         id 'org.springframework.boot' version "${springBootVersion}"
         id 'io.spring.dependency-management' version "${springDepMgmtVersion}"
         id 'io.quarkus' version "${quarkusPluginVersion}"
+        id 'org.flywaydb.flyway' version "${flywayVersion}"
     }
 }
 
 apply from: 'env.gradle'
 
 rootProject.name = 'links‑backend'
-include 'links-application', 'links-analytics‑application'
+include 'links-application', 'links-analytics‑application', 'migrations'

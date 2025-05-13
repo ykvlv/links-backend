@@ -1,0 +1,52 @@
+import org.flywaydb.gradle.task.FlywayMigrateTask
+
+buildscript {
+    dependencies {
+        classpath("org.flywaydb:flyway-database-postgresql:${flywayVersion}")
+        classpath("org.flywaydb:flyway-database-clickhouse:${flywayVersion}")
+    }
+}
+
+plugins {
+    id 'java'
+    id 'org.flywaydb.flyway'
+}
+
+configurations {
+    flywayDrivers
+}
+
+dependencies {
+    flywayDrivers "org.postgresql:postgresql:${pgDriverVersion}"
+    flywayDrivers "com.clickhouse:clickhouse-jdbc:${chDriverVersion}"
+}
+
+tasks.register('flywayPgMigrate', FlywayMigrateTask) {
+    def pgHost = System.getProperty('POSTGRES_HOST')
+    def pgPort = System.getProperty('POSTGRES_PORT')
+    def pgDb = System.getProperty('POSTGRES_DB')
+
+    url = "jdbc:postgresql://${pgHost}:${pgPort}/${pgDb}"
+    user = System.getProperty("POSTGRES_USER")
+    password = System.getProperty("POSTGRES_PASSWORD")
+    configurations = ['flywayDrivers']
+    locations = ['filesystem:src/main/resources/db/migration/postgresql']
+}
+
+tasks.register('flywayChMigrate', FlywayMigrateTask) {
+    def chHost = System.getProperty('CLICKHOUSE_HOST')
+    def chPort = System.getProperty('CLICKHOUSE_PORT')
+    def chDb = System.getProperty('CLICKHOUSE_DB')
+
+    url = "jdbc:clickhouse://${chHost}:${chPort}/${chDb}"
+    user = System.getProperty("CLICKHOUSE_USER")
+    password = System.getProperty("CLICKHOUSE_PASSWORD")
+    configurations = ['flywayDrivers']
+    locations = ['filesystem:src/main/resources/db/migration/clickhouse']
+}
+
+tasks.register('migrateAll') {
+    group = 'flyway'
+    description = 'Run all migrations'
+    dependsOn 'flywayPgMigrate', 'flywayChMigrate'
+}
