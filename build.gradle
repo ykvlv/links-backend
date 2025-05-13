@@ -1,0 +1,26 @@
+plugins {
+    id 'base'
+}
+
+allprojects {
+    group   = 'dev.ykvlv'
+    version = '0.0.0'
+
+    repositories {
+        mavenCentral()
+        mavenLocal()
+    }
+}
+
+subprojects {
+    plugins.withId('java') {
+        java {
+            sourceCompatibility = JavaVersion.VERSION_21
+            targetCompatibility = JavaVersion.VERSION_21
+        }
+        tasks.withType(JavaCompile).configureEach {
+            options.encoding = 'UTF-8'
+            options.compilerArgs << '-parameters'
+        }
+    }
+}
