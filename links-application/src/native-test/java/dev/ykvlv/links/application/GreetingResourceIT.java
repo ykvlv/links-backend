@@ -1,4 +1,4 @@
-package dev.ykvlv;
+package dev.ykvlv.links.application;
 
 import io.quarkus.test.junit.QuarkusIntegrationTest;
 

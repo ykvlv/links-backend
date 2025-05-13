@@ -1,13 +1,12 @@
 pluginManagement {
-    repositories {
-        mavenCentral()
-        gradlePluginPortal()
-        mavenLocal()
-    }
     plugins {
+        id 'org.jetbrains.kotlin.jvm' version "${kotlinVersion}"
+        id 'org.jetbrains.kotlin.plugin.spring' version "${kotlinVersion}"
+        id 'org.springframework.boot' version "${springBootVersion}"
+        id 'io.spring.dependency-management' version "${springDepMgmtVersion}"
         id 'io.quarkus' version "${quarkusPluginVersion}"
     }
 }
 
 rootProject.name = 'links‑backend'
-include 'links-application'
+include 'links-application', 'links-analytics‑application'
