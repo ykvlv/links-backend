@@ -1,0 +1,30 @@
+plugins {
+    id 'base'
+}
+
+def envProps = System.properties
+def mainPkg = "${projectDir}/cmd/server"
+
+tasks.register('goBuild', Exec) {
+    group       = 'build'
+    description = 'Builds a static redirector binary'
+
+    workingDir projectDir
+    environment envProps
+    environment 'CGO_ENABLED', '0'
+
+    def binFile = layout.buildDirectory.file('redirector').get().asFile
+    commandLine 'go', 'build', '-o', binFile, mainPkg
+    outputs.file binFile
+}
+
+tasks.register('goRun', Exec) {
+    group       = 'application'
+    description = 'Runs redirector with go run'
+
+    workingDir projectDir
+    environment envProps
+    commandLine 'go', 'run', mainPkg
+}
+
+assemble.dependsOn tasks.goBuild
