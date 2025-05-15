@@ -35,6 +35,6 @@ kotlin {
     }
 }
 
-tasks.named('test') {
-    useJUnitPlatform()
+bootRun {
+    environment System.properties
 }
