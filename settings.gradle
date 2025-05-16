@@ -11,5 +11,5 @@ pluginManagement {
 
 apply from: 'env.gradle'
 
-rootProject.name = 'links‑backend'
+rootProject.name = 'links-backend'
 include 'links-application', 'links-analytics-application', 'redirector', 'migrations'
