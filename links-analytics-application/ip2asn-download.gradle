@@ -22,7 +22,3 @@ tasks.register('extractIp2Asn') {
         ant.gunzip(src: gzFile, dest: dataDir)
     }
 }
-
-bootRun {
-    dependsOn 'extractIp2Asn'
-}
