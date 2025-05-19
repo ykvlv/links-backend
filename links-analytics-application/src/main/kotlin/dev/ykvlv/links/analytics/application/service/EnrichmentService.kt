@@ -33,7 +33,7 @@ class EnrichmentService(
         val asnOrg = ipInfo?.asnOrg
 
         // 3. UA parse
-        val ua = uaParser.parse(event.user_agent)
+        val ua = uaParser.parse(event.userAgent)
         val browser = ua.getValue(UserAgent.AGENT_NAME)
         val os = ua.getValue(UserAgent.OPERATING_SYSTEM_NAME)
         val deviceType = ua.getValue(UserAgent.DEVICE_CLASS)
@@ -50,37 +50,37 @@ class EnrichmentService(
 
         // 5. Fingerprint
         val digest = MessageDigest.getInstance("SHA-1")
-        val fpInput = "${event.ip}|${event.user_agent}"
+        val fpInput = "${event.ip}|${event.userAgent}"
         val clientFingerprint = digest.digest(fpInput.toByteArray()).joinToString("") { "%02x".format(it) }
         val isPrivate = isPrivateIp(event.ip)
 
         return EnrichedClickEvent(
             timestamp = event.timestamp,
-            event_date = eventDate,
-            event_hour = eventHour,
-            event_dow = eventDow,
+            eventDate = eventDate,
+            eventHour = eventHour,
+            eventDow = eventDow,
             slug = event.slug,
-            resolved_url = event.resolved_url,
+            resolvedUrl = event.resolvedUrl,
             ip = event.ip,
-            country_code = countryCode,
-            country_name = countryName,
-            city_name = null,
+            countryCode = countryCode,
+            countryName = countryName,
+            cityName = null,
             asn = asn,
-            asn_org = asnOrg,
+            asnOrg = asnOrg,
             browser = browser,
             os = os,
-            device_type = deviceType,
-            device_brand = deviceBrand,
-            device_name = deviceName,
-            accept_language = event.accept_language,
+            deviceType = deviceType,
+            deviceBrand = deviceBrand,
+            deviceName = deviceName,
+            acceptLanguage = event.acceptLanguage,
             referer = event.referer,
-            referer_host = refererHost,
-            referer_path = refererPath,
+            refererHost = refererHost,
+            refererPath = refererPath,
             origin = event.origin,
             host = event.host,
-            is_cache_hit = event.is_cache_hit,
-            client_fingerprint = clientFingerprint,
-            is_private_ip = isPrivate
+            isCacheHit = event.isCacheHit,
+            clientFingerprint = clientFingerprint,
+            isPrivateIp = isPrivate
         )
     }
 

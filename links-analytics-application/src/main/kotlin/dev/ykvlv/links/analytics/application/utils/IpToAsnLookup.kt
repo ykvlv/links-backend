@@ -27,7 +27,7 @@ class IpToAsnLookup(
      * Returns `null` when not found or when the input is malformed.
      */
     fun lookup(ipString: String): IpRange? {
-        val ipLong = ipv4ToLong(ipString) ?: return null
+        val ipUInt = ipv4ToUInt(ipString) ?: return null
         val ranges = rangesRef.get()
 
         var l = 0
@@ -36,8 +36,8 @@ class IpToAsnLookup(
             val mid   = (l + r) ushr 1
             val range = ranges[mid]
             when {
-                ipLong < range.start -> r = mid - 1
-                ipLong > range.end   -> l = mid + 1
+                ipUInt < range.start -> r = mid - 1
+                ipUInt > range.end   -> l = mid + 1
                 else                 -> return range
             }
         }
@@ -49,12 +49,12 @@ class IpToAsnLookup(
         rangesRef.set(dataLoader.loadRanges())
     }
 
-    private fun ipv4ToLong(ip: String): Long? {
+    private fun ipv4ToUInt(ip: String): UInt? {
         val parts = ip.split('.')
         if (parts.size != 4) return null
-        return parts.fold(0L) { acc, part ->
-            val p = part.toIntOrNull() ?: return null
-            if (p !in 0..255) return null
+        return parts.fold(0u) { acc, part ->
+            val p = part.toUIntOrNull() ?: return null
+            if (p > 255u) return null
             (acc shl 8) + p
         }
     }

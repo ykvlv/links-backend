@@ -60,9 +60,9 @@ class IpToAsnDataLoader(
                 .map { line ->
                     val p = line.split('\t')
                     IpRange(
-                        p[0].toLong(),
-                        p[1].toLong(),
-                        p[2].toLong(),
+                        p[0].toUInt(),
+                        p[1].toUInt(),
+                        p[2].toUInt(),
                         p[3],
                         p.getOrNull(4) ?: ""
                     )

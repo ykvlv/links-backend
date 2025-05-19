@@ -1,16 +1,24 @@
 package dev.ykvlv.links.analytics.application.data.dto
 
+import com.fasterxml.jackson.annotation.JsonProperty
+
 data class ClickEvent(
     val timestamp: String,
     val slug: String,
-    val resolved_url: String,
+    @JsonProperty("resolved_url")
+    val resolvedUrl: String,
     val ip: String,
-    val x_forwarded_for: String,
-    val x_real_ip: String,
-    val user_agent: String,
-    val accept_language: String,
+    @JsonProperty("x_forwarded_for")
+    val xForwardedFor: String,
+    @JsonProperty("x_real_ip")
+    val xRealIp: String,
+    @JsonProperty("user_agent")
+    val userAgent: String,
+    @JsonProperty("accept_language")
+    val acceptLanguage: String,
     val referer: String,
     val origin: String,
     val host: String,
-    val is_cache_hit: Boolean
+    @JsonProperty("is_cache_hit")
+    val isCacheHit: Boolean
 )
