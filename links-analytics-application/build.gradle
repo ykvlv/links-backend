@@ -3,6 +3,7 @@ plugins {
     id 'org.jetbrains.kotlin.plugin.spring'
     id 'org.springframework.boot'
     id 'io.spring.dependency-management'
+    id 'de.undercouch.download' version '5.5.0'
 }
 
 dependencies {
@@ -10,6 +11,9 @@ dependencies {
     implementation 'org.springframework.kafka:spring-kafka'
     implementation 'com.fasterxml.jackson.module:jackson-module-kotlin'
     implementation 'org.jetbrains.kotlin:kotlin-reflect'
+    implementation "com.clickhouse:clickhouse-jdbc:${chDriverVersion}"
+    implementation 'nl.basjes.parse.useragent:yauaa:7.31.0'
+    implementation 'com.neovisionaries:nv-i18n:1.29'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.jetbrains.kotlin:kotlin-test-junit5'
@@ -27,6 +31,8 @@ kotlin {
         freeCompilerArgs.addAll '-Xjsr305=strict'
     }
 }
+
+apply from: 'ip2asn-download.gradle'
 
 bootRun {
     environment System.properties

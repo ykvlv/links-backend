@@ -1,0 +1,30 @@
+package dev.ykvlv.links.analytics.application.data.dto
+
+data class EnrichedClickEvent(
+    val timestamp: String,
+    val event_date: String,
+    val event_hour: String,
+    val event_dow: String,
+    val slug: String,
+    val resolved_url: String,
+    val ip: String,
+    val country_code: String?,
+    val country_name: String?,
+    val city_name: String?,
+    val asn: Long?,
+    val asn_org: String?,
+    val browser: String?,
+    val os: String?,
+    val device_type: String?,
+    val device_brand: String?,
+    val device_name: String?,
+    val accept_language: String,
+    val referer: String,
+    val referer_host: String?,
+    val referer_path: String?,
+    val origin: String?,
+    val host: String?,
+    val is_cache_hit: Boolean,
+    val client_fingerprint: String,
+    val is_private_ip: Boolean
+)
