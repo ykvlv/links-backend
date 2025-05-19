@@ -11,10 +11,11 @@ type Config struct {
 	RedirectPort int    `env:"REDIRECTOR_PORT"`
 	RoutePrefix  string `env:"REDIRECTOR_ROUTE_PREFIX"`
 
-	RedisHost     string `env:"REDIS_HOST"`
-	RedisPort     int    `env:"REDIS_PORT"`
-	RedisPassword string `env:"REDIS_PASSWORD"`
-	RedisDB       int    `env:"REDIS_DB"`
+	RedisHost       string `env:"REDIS_HOST"`
+	RedisPort       int    `env:"REDIS_PORT"`
+	RedisPassword   string `env:"REDIS_PASSWORD"`
+	RedisDB         int    `env:"REDIS_DB"`
+	CacheTTLSeconds int    `env:"CACHE_TTL_SECONDS"`
 
 	PgHost string `env:"POSTGRES_HOST"`
 	PgPort int    `env:"POSTGRES_PORT"`
@@ -22,7 +23,9 @@ type Config struct {
 	PgPass string `env:"POSTGRES_PASSWORD"`
 	PgDB   string `env:"POSTGRES_DB"`
 
-	CacheTTLSeconds int `env:"CACHE_TTL_SECONDS"`
+	KafkaHost        string `env:"KAFKA_HOST"`
+	KafkaPort        int    `env:"KAFKA_PORT"`
+	KafkaTopicClicks string `env:"KAFKA_TOPIC_CLICKS"`
 }
 
 func Load() (*Config, error) {
@@ -53,4 +56,8 @@ func (c *Config) PgDSN() string {
 
 func (c *Config) CacheTTL() time.Duration {
 	return time.Duration(c.CacheTTLSeconds) * time.Second
+}
+
+func (c *Config) KafkaAddr() string {
+	return fmt.Sprintf("%s:%d", c.KafkaHost, c.KafkaPort)
 }
