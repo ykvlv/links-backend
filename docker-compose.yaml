@@ -1,7 +1,7 @@
 services:
   postgres:
     image: postgres:16-alpine
-    container_name: postgres-links
+    container_name: links-postgres
     restart: unless-stopped
     ports:
       - "${POSTGRES_PORT}:5432"
@@ -19,7 +19,7 @@ services:
 
   clickhouse:
     image: clickhouse/clickhouse-server:25.4
-    container_name: clickhouse-links
+    container_name: links-clickhouse
     restart: unless-stopped
     ports:
       - "${CLICKHOUSE_PORT}:8123"
@@ -37,7 +37,7 @@ services:
 
   redis:
     image: redis:7-alpine
-    container_name: redis-links
+    container_name: links-redis
     restart: unless-stopped
     ports:
       - "${REDIS_PORT}:6379"
@@ -50,9 +50,10 @@ services:
 
   kafka:
     image: bitnami/kafka:4.0
-    container_name: kafka-links
+    container_name: links-kafka
+    restart: unless-stopped
     ports:
-      - "${KAFKA_PORT}:9092"
+      - "${KAFKA_PORT}:9094"
     volumes:
       - kafka-data:/bitnami/kafka
     environment:
@@ -60,16 +61,49 @@ services:
       KAFKA_CFG_PROCESS_ROLES:            "controller,broker"
       KAFKA_CFG_CONTROLLER_QUORUM_VOTERS: "1@kafka:9093"
 
-      KAFKA_CFG_LISTENERS:                      "PLAINTEXT://:9092,CONTROLLER://:9093"
-      KAFKA_CFG_ADVERTISED_LISTENERS:           "PLAINTEXT://${KAFKA_HOST}:9092"
-      KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP: "CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT"
+      KAFKA_CFG_LISTENERS:                      "INTERNAL://:9092,EXTERNAL://:9094,CONTROLLER://:9093"
+      KAFKA_CFG_ADVERTISED_LISTENERS:           "INTERNAL://kafka:9092,EXTERNAL://${KAFKA_HOST}:${KAFKA_PORT}"
+      KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP: "INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT,CONTROLLER:PLAINTEXT"
+      KAFKA_CFG_INTER_BROKER_LISTENER_NAME:     "INTERNAL"
       KAFKA_CFG_CONTROLLER_LISTENER_NAMES:      "CONTROLLER"
-      KAFKA_CFG_INTER_BROKER_LISTENER_NAME:     "PLAINTEXT"
     healthcheck:
-      test: [ "CMD", "kafka-topics.sh", "--bootstrap-server", "${KAFKA_HOST}:9092", "--list" ]
+      test: [ "CMD", "kafka-topics.sh", "--bootstrap-server", "kafka:9092", "--list" ]
       interval: 10s
       timeout: 5s
       retries: 5
+
+  redirector:
+    build:
+      context: ./redirector
+      dockerfile: Dockerfile
+    container_name: links-redirector
+    restart: unless-stopped
+    ports:
+      - "${REDIRECTOR_PORT}:${REDIRECTOR_PORT}"
+    environment:
+      REDIRECTOR_PORT:         ${REDIRECTOR_PORT}
+      REDIRECTOR_ROUTE_PREFIX: ${REDIRECTOR_ROUTE_PREFIX}
+      POSTGRES_HOST:           postgres
+      POSTGRES_PORT:           5432
+      POSTGRES_DB:             ${POSTGRES_DB}
+      POSTGRES_USER:           ${POSTGRES_USER}
+      POSTGRES_PASSWORD:       ${POSTGRES_PASSWORD}
+      REDIS_HOST:              redis
+      REDIS_PORT:              6379
+      REDIS_DB:                ${REDIS_DB}
+      REDIS_PASSWORD:          ${REDIS_PASSWORD}
+      CACHE_TTL_SECONDS:       ${CACHE_TTL_SECONDS}
+      KAFKA_HOST:              kafka
+      KAFKA_PORT:              9092
+      KAFKA_TOPIC_CLICKS:      ${KAFKA_TOPIC_CLICKS}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+#    healthcheck: TODO
 
 volumes:
   postgres-data:
