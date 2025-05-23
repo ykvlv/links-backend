@@ -69,7 +69,7 @@ func (h *Redirect) Handle(c *fiber.Ctx) error {
 
 	// Respond to client
 	event.ResolvedURL = url
-	event.IsCacheHit = true
+	event.IsCacheHit = false
 	go h.setCache(slug, url)
 	go h.sendEvent(event)
 	return c.Redirect(url, fiber.StatusFound)

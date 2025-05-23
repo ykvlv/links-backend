@@ -1,20 +1,20 @@
 apply plugin: 'de.undercouch.download'
 
-def ip2asnUrl = System.getProperty('IP2ASN_URL')
-def ip2asnRel = System.getProperty('IP2ASN_REL_PATH')
-def tsvFile = file(ip2asnRel)
-def gzFile = new File(tsvFile.absolutePath + '.gz')
-def dataDir = tsvFile.parentFile
-
 tasks.register('downloadIp2Asn', Download) {
-    src ip2asnUrl
-    dest gzFile
+    def tsvFile = file(System.getProperty('IP2ASN_REL_PATH'))
+
+    src System.getProperty('IP2ASN_URL')
+    dest new File(tsvFile.absolutePath + '.gz')
     onlyIfModified true
     overwrite true
 }
 
 tasks.register('extractIp2Asn') {
     dependsOn 'downloadIp2Asn'
+    def tsvFile = file(System.getProperty('IP2ASN_REL_PATH'))
+    def gzFile = new File(tsvFile.absolutePath + '.gz')
+    def dataDir = tsvFile.parentFile
+
     inputs.file  gzFile
     outputs.file tsvFile
     doLast {

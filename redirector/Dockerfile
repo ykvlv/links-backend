@@ -16,8 +16,6 @@ RUN CGO_ENABLED=0 go build -v -o /app/redirector ./cmd/server
 # Stage 2: Create the final lightweight image
 FROM alpine:3.21
 
-ARG REDIRECTOR_PORT
-
 WORKDIR /app
 
 COPY --from=builder /usr/bin/dumb-init /usr/bin/dumb-init
@@ -26,8 +24,6 @@ COPY --from=builder /app/redirector /app/redirector
 # Create a non-root user and group for security
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 USER appuser
-
-EXPOSE ${REDIRECTOR_PORT}
 
 # Use dumb-init as the entrypoint to handle signals correctly
 ENTRYPOINT ["/usr/bin/dumb-init", "--"]

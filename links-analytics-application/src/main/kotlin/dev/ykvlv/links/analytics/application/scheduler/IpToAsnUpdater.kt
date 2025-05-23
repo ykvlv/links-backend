@@ -11,11 +11,7 @@ import org.springframework.stereotype.Component
  * and atomically replaces the in‑memory snapshot.
  */
 @Component
-@ConditionalOnProperty(
-    name = ["app.ip2asn-auto-update"],
-    havingValue = "true",
-    matchIfMissing = true
-)
+@ConditionalOnProperty(name = ["app.ip2asn-auto-update"], havingValue = "true")
 class IpToAsnUpdater(
     private val dataLoader: IpToAsnDataLoader,
     private val lookup: IpToAsnLookup

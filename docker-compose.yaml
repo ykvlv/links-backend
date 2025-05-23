@@ -105,6 +105,34 @@ services:
         condition: service_healthy
 #    healthcheck: TODO
 
+  analytics:
+    build:
+      context: .
+      dockerfile: ./links-analytics-application/Dockerfile
+    container_name: links-analytics
+    restart: unless-stopped
+    ports:
+      - "${ANALYTICS_PORT}:${ANALYTICS_PORT}"
+    environment:
+      ANALYTICS_PORT:           ${ANALYTICS_PORT}
+      CLICKHOUSE_HOST:          clickhouse
+      CLICKHOUSE_PORT:          8123
+      CLICKHOUSE_DB:            ${CLICKHOUSE_DB}
+      CLICKHOUSE_USER:          ${CLICKHOUSE_USER}
+      CLICKHOUSE_PASSWORD:      ${CLICKHOUSE_PASSWORD}
+      KAFKA_HOST:               kafka
+      KAFKA_PORT:               9092
+      KAFKA_TOPIC_CLICKS:       ${KAFKA_TOPIC_CLICKS}
+      ANALYTICS_CONSUMER_GROUP: ${ANALYTICS_CONSUMER_GROUP}
+      IP2ASN_REL_PATH:          ${IP2ASN_REL_PATH}
+      IP2ASN_URL:               ${IP2ASN_URL}
+    depends_on:
+      clickhouse:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+#    healthcheck: TODO
+
 volumes:
   postgres-data:
   clickhouse-data:
