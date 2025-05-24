@@ -123,6 +123,7 @@ services:
       KAFKA_HOST:               kafka
       KAFKA_PORT:               9092
       KAFKA_TOPIC_CLICKS:       ${KAFKA_TOPIC_CLICKS}
+      KAFKA_TOPIC_CLICKS_DLT:   ${KAFKA_TOPIC_CLICKS_DLT}
       ANALYTICS_CONSUMER_GROUP: ${ANALYTICS_CONSUMER_GROUP}
       IP2ASN_REL_PATH:          ${IP2ASN_REL_PATH}
       IP2ASN_URL:               ${IP2ASN_URL}

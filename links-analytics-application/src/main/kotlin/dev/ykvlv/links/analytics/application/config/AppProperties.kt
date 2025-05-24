@@ -12,5 +12,8 @@ class AppProperties {
     var ip2asnAutoUpdate: Boolean = false
 
     lateinit var kafkaTopicClicks: String
+    lateinit var kafkaTopicClicksDlt: String
+    var kafkaListenerConcurrency: Int = 1
+    var kafkaMaxFailures: Int = 10
 
 }
