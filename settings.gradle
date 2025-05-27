@@ -4,7 +4,7 @@ pluginManagement {
         id 'org.jetbrains.kotlin.plugin.spring' version "${kotlinVersion}"
         id 'org.springframework.boot' version "${springBootVersion}"
         id 'io.spring.dependency-management' version "${springDepMgmtVersion}"
-        id 'io.quarkus' version "${quarkusPluginVersion}"
+        id 'io.quarkus' version "${quarkusVersion}"
         id 'org.flywaydb.flyway' version "${flywayVersion}"
     }
 }
